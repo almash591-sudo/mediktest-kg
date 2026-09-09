@@ -14,11 +14,18 @@ type Question = {
 
 type Option = 'a' | 'b' | 'c' | 'd'
 
-export default function QuestionList({ questions }: { questions: Question[] }) {
+export default function QuestionList({
+  questions,
+  reviewMode = false,
+}: {
+  questions: Question[]
+  reviewMode?: boolean
+}) {
   const [answers, setAnswers] = useState<Record<number, Option>>({})
   const [showResults, setShowResults] = useState(false)
 
   function handleSelect(questionId: number, option: Option) {
+    if (reviewMode) return
     if (answers[questionId]) return
     setAnswers((prev) => ({ ...prev, [questionId]: option }))
   }
@@ -31,7 +38,10 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
   }
 
   function getButtonStyle(question: Question, option: Option): CSSProperties {
-    const selected = answers[question.id]
+    const selected = reviewMode
+      ? (question.correct_answer as Option)
+      : answers[question.id]
+
     const base: CSSProperties = {
       display: 'block',
       width: '100%',
@@ -40,7 +50,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
       marginBottom: '8px',
       borderRadius: '6px',
       border: '1px solid #444',
-      cursor: selected ? 'default' : 'pointer',
+      cursor: reviewMode || selected ? 'default' : 'pointer',
       background: '#111',
       color: '#fff',
     }
@@ -74,7 +84,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
 
   return (
     <div>
-      {showResults && (
+      {!reviewMode && showResults && (
         <div
           style={{
             padding: '16px',
@@ -121,7 +131,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
         </div>
       ))}
 
-      {!showResults && (
+      {!reviewMode && !showResults && (
         <button
           onClick={handleFinish}
           style={{
