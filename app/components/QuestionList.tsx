@@ -16,6 +16,7 @@ type Option = 'a' | 'b' | 'c' | 'd'
 
 export default function QuestionList({ questions }: { questions: Question[] }) {
   const [answers, setAnswers] = useState<Record<number, Option>>({})
+  const [showResults, setShowResults] = useState(false)
 
   function handleSelect(questionId: number, option: Option) {
     if (answers[questionId]) return
@@ -57,8 +58,54 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
 
   const options: Option[] = ['a', 'b', 'c', 'd']
 
+  const answeredCount = Object.keys(answers).length
+  const correctCount = questions.filter(
+    (q) => answers[q.id] === q.correct_answer
+  ).length
+
+  function handleFinish() {
+    setShowResults(true)
+  }
+
+  function handleRestart() {
+    setAnswers({})
+    setShowResults(false)
+  }
+
   return (
     <div>
+      {showResults && (
+        <div
+          style={{
+            padding: '16px',
+            marginBottom: '24px',
+            borderRadius: '8px',
+            border: '1px solid #444',
+            background: '#161616',
+          }}
+        >
+          <p style={{ fontWeight: 'bold', fontSize: '18px', margin: 0 }}>
+            Результат: {correctCount} из {questions.length} правильно
+          </p>
+          <p style={{ margin: '4px 0 12px', color: '#aaa' }}>
+            Отвечено: {answeredCount} из {questions.length}
+          </p>
+          <button
+            onClick={handleRestart}
+            style={{
+              padding: '8px 16px',
+              borderRadius: '6px',
+              border: '1px solid #444',
+              background: '#222',
+              color: '#fff',
+              cursor: 'pointer',
+            }}
+          >
+            Пройти заново
+          </button>
+        </div>
+      )}
+
       {questions.map((q) => (
         <div key={q.id} style={{ marginBottom: '30px' }}>
           <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
@@ -73,6 +120,24 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
           ))}
         </div>
       ))}
+
+      {!showResults && (
+        <button
+          onClick={handleFinish}
+          style={{
+            padding: '12px 24px',
+            borderRadius: '6px',
+            border: 'none',
+            background: '#2e7d4f',
+            color: '#fff',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            marginTop: '10px',
+          }}
+        >
+          Завершить тест
+        </button>
+      )}
     </div>
   )
 }
