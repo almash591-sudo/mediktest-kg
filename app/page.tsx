@@ -21,6 +21,23 @@ export default async function Home() {
     <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
       <h1>МедикТест КР</h1>
 
+      <div style={{ margin: '20px 0' }}>
+        <Link
+          href="/exam"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            background: '#2e7d4f',
+            color: '#fff',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+          }}
+        >
+          Начать экзамен
+        </Link>
+      </div>
+
       <h2>Блоки</h2>
       {blocks.map((b) => (
         <div key={b} style={{ marginBottom: '8px' }}>
