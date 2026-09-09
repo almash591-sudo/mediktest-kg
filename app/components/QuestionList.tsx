@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, CSSProperties } from 'react'
+import { useState, useEffect, CSSProperties } from 'react'
+import { supabase } from '../../lib/supabaseClient'
 
 type Question = {
   id: number
@@ -22,12 +23,90 @@ export default function QuestionList({
   reviewMode?: boolean
 }) {
   const [answers, setAnswers] = useState<Record<number, Option>>({})
+  const [favorites, setFavorites] = useState<Record<number, boolean>>({})
   const [showResults, setShowResults] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
 
-  function handleSelect(questionId: number, option: Option) {
+  useEffect(() => {
+    if (reviewMode) return
+
+    async function loadUserAndProgress() {
+      const { data: userData } = await supabase.auth.getUser()
+      const uid = userData.user?.id ?? null
+      setUserId(uid)
+
+      if (!uid) return
+
+      const ids = questions.map((q) => q.id)
+      if (ids.length === 0) return
+
+      const { data } = await supabase
+        .from('user_answers')
+        .select('question_id, selected_option, is_favorite')
+        .eq('user_id', uid)
+        .in('question_id', ids)
+
+      if (!data) return
+
+      const answersMap: Record<number, Option> = {}
+      const favMap: Record<number, boolean> = {}
+      for (const row of data) {
+        if (row.selected_option) {
+          answersMap[row.question_id] = row.selected_option as Option
+        }
+        if (row.is_favorite) {
+          favMap[row.question_id] = true
+        }
+      }
+      setAnswers(answersMap)
+      setFavorites(favMap)
+    }
+
+    loadUserAndProgress()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  async function handleSelect(questionId: number, option: Option) {
     if (reviewMode) return
     if (answers[questionId]) return
+
     setAnswers((prev) => ({ ...prev, [questionId]: option }))
+
+    if (!userId) return
+
+    const question = questions.find((q) => q.id === questionId)
+    if (!question) return
+
+    const isCorrect = option === question.correct_answer
+
+    await supabase.from('user_answers').upsert(
+      {
+        user_id: userId,
+        question_id: questionId,
+        is_correct: isCorrect,
+        selected_option: option,
+      },
+      { onConflict: 'user_id,question_id' }
+    )
+  }
+
+  async function toggleFavorite(questionId: number) {
+    if (!userId) {
+      alert('Войдите в аккаунт, чтобы добавлять вопросы в избранное')
+      return
+    }
+
+    const newValue = !favorites[questionId]
+    setFavorites((prev) => ({ ...prev, [questionId]: newValue }))
+
+    await supabase.from('user_answers').upsert(
+      {
+        user_id: userId,
+        question_id: questionId,
+        is_favorite: newValue,
+      },
+      { onConflict: 'user_id,question_id' }
+    )
   }
 
   function getOptionText(q: Question, opt: Option): string {
@@ -111,14 +190,39 @@ export default function QuestionList({
               cursor: 'pointer',
             }}
           >
-            Пройти заново
+            Пройти заново (на экране)
           </button>
         </div>
       )}
 
       {questions.map((q) => (
         <div key={q.id} style={{ marginBottom: '30px' }}>
-          <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              gap: '10px',
+            }}
+          >
+            <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
+            {!reviewMode && (
+              <button
+                onClick={() => toggleFavorite(q.id)}
+                title="В избранное"
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '20px',
+                  color: favorites[q.id] ? '#ffd166' : '#555',
+                  flexShrink: 0,
+                }}
+              >
+                {favorites[q.id] ? '★' : '☆'}
+              </button>
+            )}
+          </div>
           {options.map((opt) => (
             <button
               key={opt}
