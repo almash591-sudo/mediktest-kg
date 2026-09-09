@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient'
+import AuthStatus from './components/AuthStatus'
 import Link from 'next/link'
 
 export default async function Home() {
@@ -19,6 +20,8 @@ export default async function Home() {
 
   return (
     <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
+      <AuthStatus />
+
       <h1>МедикТест КР</h1>
 
       <div style={{ margin: '20px 0' }}>
