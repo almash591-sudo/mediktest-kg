@@ -4,11 +4,15 @@ import Link from 'next/link'
 
 export default async function TopicPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ topic: string }>
+  searchParams: Promise<{ mode?: string }>
 }) {
   const { topic: rawTopic } = await params
+  const { mode } = await searchParams
   const topic = decodeURIComponent(rawTopic)
+  const reviewMode = mode === 'review'
 
   const { data: questions, error } = await supabase
     .from('questions')
@@ -25,7 +29,30 @@ export default async function TopicPage({
         &larr; Назад
       </Link>
       <h1>{topic}</h1>
-      <QuestionList questions={questions} />
+
+      <div style={{ marginBottom: '20px' }}>
+        <Link
+          href={`/topics/${encodeURIComponent(topic)}`}
+          style={{
+            marginRight: '16px',
+            color: reviewMode ? '#4da3ff' : '#fff',
+            fontWeight: reviewMode ? 'normal' : 'bold',
+          }}
+        >
+          Тренировка
+        </Link>
+        <Link
+          href={`/topics/${encodeURIComponent(topic)}?mode=review`}
+          style={{
+            color: reviewMode ? '#fff' : '#4da3ff',
+            fontWeight: reviewMode ? 'bold' : 'normal',
+          }}
+        >
+          Просмотр с ответами
+        </Link>
+      </div>
+
+      <QuestionList questions={questions} reviewMode={reviewMode} />
     </div>
   )
 }
