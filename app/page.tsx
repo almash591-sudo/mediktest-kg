@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabaseClient'
+import QuestionList from './components/QuestionList'
 
 export default async function Home() {
   const { data: questions, error } = await supabase
@@ -10,17 +11,9 @@ export default async function Home() {
   }
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Вопросы</h1>
-      {questions.map((q) => (
-        <div key={q.id} style={{ marginBottom: '20px' }}>
-          <p><b>{q.question_text}</b></p>
-          <p>a) {q.option_a}</p>
-          <p>b) {q.option_b}</p>
-          <p>c) {q.option_c}</p>
-          <p>d) {q.option_d}</p>
-        </div>
-      ))}
+    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
+      <h1>Тестирование</h1>
+      <QuestionList questions={questions} />
     </div>
   )
 }
