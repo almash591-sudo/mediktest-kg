@@ -22,6 +22,13 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
     setAnswers((prev) => ({ ...prev, [questionId]: option }))
   }
 
+  function getOptionText(q: Question, opt: Option): string {
+    if (opt === 'a') return q.option_a
+    if (opt === 'b') return q.option_b
+    if (opt === 'c') return q.option_c
+    return q.option_d
+  }
+
   function getButtonStyle(question: Question, option: Option): CSSProperties {
     const selected = answers[question.id]
     const base: CSSProperties = {
@@ -61,7 +68,7 @@ export default function QuestionList({ questions }: { questions: Question[] }) {
               style={getButtonStyle(q, opt)}
               onClick={() => handleSelect(q.id, opt)}
             >
-              {opt}) {q[`option_${opt}`]}
+              {opt}) {getOptionText(q, opt)}
             </button>
           ))}
         </div>
