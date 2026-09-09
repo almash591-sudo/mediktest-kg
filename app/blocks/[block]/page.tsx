@@ -4,11 +4,15 @@ import Link from 'next/link'
 
 export default async function BlockPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ block: string }>
+  searchParams: Promise<{ mode?: string }>
 }) {
   const { block } = await params
+  const { mode } = await searchParams
   const blockNumber = Number(block)
+  const reviewMode = mode === 'review'
 
   const { data: questions, error } = await supabase
     .from('questions')
@@ -25,7 +29,30 @@ export default async function BlockPage({
         &larr; Назад
       </Link>
       <h1>Блок {blockNumber}</h1>
-      <QuestionList questions={questions} />
+
+      <div style={{ marginBottom: '20px' }}>
+        <Link
+          href={`/blocks/${blockNumber}`}
+          style={{
+            marginRight: '16px',
+            color: reviewMode ? '#4da3ff' : '#fff',
+            fontWeight: reviewMode ? 'normal' : 'bold',
+          }}
+        >
+          Тренировка
+        </Link>
+        <Link
+          href={`/blocks/${blockNumber}?mode=review`}
+          style={{
+            color: reviewMode ? '#fff' : '#4da3ff',
+            fontWeight: reviewMode ? 'bold' : 'normal',
+          }}
+        >
+          Просмотр с ответами
+        </Link>
+      </div>
+
+      <QuestionList questions={questions} reviewMode={reviewMode} />
     </div>
   )
 }
