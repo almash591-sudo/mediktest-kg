@@ -24,7 +24,7 @@ export default async function Home() {
 
       <h1>МедикТест КР</h1>
 
-      <div style={{ margin: '20px 0' }}>
+      <div style={{ margin: '20px 0', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
         <Link
           href="/exam"
           style={{
@@ -38,6 +38,34 @@ export default async function Home() {
           }}
         >
           Начать экзамен
+        </Link>
+        <Link
+          href="/mistakes"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            background: '#333',
+            color: '#fff',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+          }}
+        >
+          Мои ошибки
+        </Link>
+        <Link
+          href="/favorites"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            background: '#333',
+            color: '#fff',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+          }}
+        >
+          Избранное
         </Link>
       </div>
 
