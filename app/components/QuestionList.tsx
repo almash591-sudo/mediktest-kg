@@ -1,18 +1,30 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, CSSProperties } from 'react'
 
-export default function QuestionList({ questions }) {
-  const [answers, setAnswers] = useState({})
+type Question = {
+  id: number
+  question_text: string
+  option_a: string
+  option_b: string
+  option_c: string
+  option_d: string
+  correct_answer: string
+}
 
-  function handleSelect(questionId, option) {
+type Option = 'a' | 'b' | 'c' | 'd'
+
+export default function QuestionList({ questions }: { questions: Question[] }) {
+  const [answers, setAnswers] = useState<Record<number, Option>>({})
+
+  function handleSelect(questionId: number, option: Option) {
     if (answers[questionId]) return
     setAnswers((prev) => ({ ...prev, [questionId]: option }))
   }
 
-  function getButtonStyle(question, option) {
+  function getButtonStyle(question: Question, option: Option): CSSProperties {
     const selected = answers[question.id]
-    const base = {
+    const base: CSSProperties = {
       display: 'block',
       width: '100%',
       textAlign: 'left',
@@ -36,12 +48,14 @@ export default function QuestionList({ questions }) {
     return { ...base, opacity: 0.5 }
   }
 
+  const options: Option[] = ['a', 'b', 'c', 'd']
+
   return (
     <div>
       {questions.map((q) => (
         <div key={q.id} style={{ marginBottom: '30px' }}>
           <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
-          {['a', 'b', 'c', 'd'].map((opt) => (
+          {options.map((opt) => (
             <button
               key={opt}
               style={getButtonStyle(q, opt)}
