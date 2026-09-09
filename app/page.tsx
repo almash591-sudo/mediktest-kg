@@ -1,19 +1,43 @@
 import { supabase } from '../lib/supabaseClient'
-import QuestionList from './components/QuestionList'
+import Link from 'next/link'
 
 export default async function Home() {
   const { data: questions, error } = await supabase
     .from('questions')
-    .select('*')
+    .select('block_number, topic')
 
   if (error) {
     return <div>Ошибка: {error.message}</div>
   }
 
+  const blocks = Array.from(new Set(questions.map((q) => q.block_number))).sort(
+    (a, b) => a - b
+  )
+  const topics = Array.from(
+    new Set(questions.map((q) => q.topic).filter(Boolean))
+  )
+
   return (
     <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
-      <h1>Тестирование</h1>
-      <QuestionList questions={questions} />
+      <h1>МедикТест КР</h1>
+
+      <h2>Блоки</h2>
+      {blocks.map((b) => (
+        <div key={b} style={{ marginBottom: '8px' }}>
+          <Link href={`/blocks/${b}`} style={{ color: '#4da3ff' }}>
+            Блок {b}
+          </Link>
+        </div>
+      ))}
+
+      <h2 style={{ marginTop: '30px' }}>Темы</h2>
+      {topics.map((t) => (
+        <div key={t} style={{ marginBottom: '8px' }}>
+          <Link href={`/topics/${encodeURIComponent(t)}`} style={{ color: '#4da3ff' }}>
+            {t}
+          </Link>
+        </div>
+      ))}
     </div>
   )
 }
