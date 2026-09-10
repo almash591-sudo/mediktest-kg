@@ -1,5 +1,6 @@
 import { supabase } from '../../lib/supabaseClient'
 import ExamClient from '../components/ExamClient'
+import SubscriptionGate from '../components/SubscriptionGate'
 import Link from 'next/link'
 
 const EXAM_QUESTION_COUNT = 100
@@ -23,7 +24,9 @@ export default async function ExamPage() {
       <p style={{ color: '#aaa' }}>
         Вопросов: {examQuestions.length}. Время: 50 минут.
       </p>
-      <ExamClient questions={examQuestions} />
+      <SubscriptionGate>
+        <ExamClient questions={examQuestions} />
+      </SubscriptionGate>
     </div>
   )
 }
