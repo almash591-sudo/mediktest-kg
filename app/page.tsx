@@ -56,107 +56,61 @@ export default function Home() {
   }, [])
 
   if (error) {
-    return <div style={{ padding: '20px' }}>Ошибка: {error}</div>
+    return <div className="container">Ошибка: {error}</div>
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
+    <div className="container">
       <AuthStatus />
 
-      <h1>МедикТест КР</h1>
+      <h1 className="wordmark">МедикТест КР</h1>
 
-      <div style={{ margin: '20px 0', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-        <Link
-          href="/exam"
-          style={{
-            display: 'inline-block',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            background: '#2e7d4f',
-            color: '#fff',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-          }}
-        >
-          Начать экзамен
-        </Link>
-        <Link
-          href="/mistakes"
-          style={{
-            display: 'inline-block',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            background: '#333',
-            color: '#fff',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-          }}
-        >
-          Мои ошибки
-        </Link>
-        <Link
-          href="/favorites"
-          style={{
-            display: 'inline-block',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            background: '#333',
-            color: '#fff',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-          }}
-        >
-          Избранное
-        </Link>
-        <Link
-          href="/subscribe"
-          style={{
-            display: 'inline-block',
-            padding: '12px 20px',
-            borderRadius: '6px',
-            background: '#7a5b1a',
-            color: '#fff',
-            fontWeight: 'bold',
-            textDecoration: 'none',
-          }}
-        >
-          Подписка
-        </Link>
+      <div className="nav-row">
+        <Link href="/exam" className="btn btn-primary">Начать экзамен</Link>
+        <Link href="/mistakes" className="btn btn-outline">Мои ошибки</Link>
+        <Link href="/favorites" className="btn btn-outline">Избранное</Link>
+        <Link href="/subscribe" className="btn btn-outline">Подписка</Link>
       </div>
 
       {!isSubscribed && (
-        <p style={{ color: '#aaa', marginBottom: '20px' }}>
+        <p className="muted" style={{ marginBottom: '20px' }}>
           Блок 1 доступен бесплатно. Остальные блоки, темы и экзамен — по подписке.
         </p>
       )}
 
       {loading ? (
-        <p style={{ color: '#aaa' }}>Загрузка...</p>
+        <p className="muted">Загрузка...</p>
       ) : (
         <>
-          <h2>Блоки</h2>
-          {blocks.map((b) => {
-            const locked = !isSubscribed && b !== 1
-            return (
-              <div key={b} style={{ marginBottom: '8px' }}>
-                <Link href={`/blocks/${b}`} style={{ color: '#4da3ff' }}>
-                  Блок {b} {locked ? '🔒' : ''}
-                </Link>
-              </div>
-            )
-          })}
+          <h2 className="section-heading">Блоки</h2>
+          <div>
+            {blocks.map((b) => {
+              const locked = !isSubscribed && b !== 1
+              return (
+                <div key={b} className="list-link-row">
+                  <Link href={`/blocks/${b}`} className="link">
+                    Блок {b}
+                  </Link>
+                  {locked && <span className="locked-badge">по подписке</span>}
+                </div>
+              )
+            })}
+          </div>
 
-          <h2 style={{ marginTop: '30px' }}>Темы</h2>
-          {topics.map((t) => {
-            const locked = !isSubscribed
-            return (
-              <div key={t} style={{ marginBottom: '8px' }}>
-                <Link href={`/topics/${encodeURIComponent(t)}`} style={{ color: '#4da3ff' }}>
-                  {t} {locked ? '🔒' : ''}
-                </Link>
-              </div>
-            )
-          })}
+          <h2 className="section-heading">Темы</h2>
+          <div>
+            {topics.map((t) => {
+              const locked = !isSubscribed
+              return (
+                <div key={t} className="list-link-row">
+                  <Link href={`/topics/${encodeURIComponent(t)}`} className="link">
+                    {t}
+                  </Link>
+                  {locked && <span className="locked-badge">по подписке</span>}
+                </div>
+              )
+            })}
+          </div>
         </>
       )}
     </div>
