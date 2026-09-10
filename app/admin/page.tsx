@@ -149,14 +149,14 @@ export default function AdminPage() {
   }
 
   if (checking) {
-    return <div style={{ padding: '20px' }}>Проверка доступа...</div>
+    return <div className="container">Проверка доступа...</div>
   }
 
   if (!isAdmin) {
     return (
-      <div style={{ padding: '20px' }}>
+      <div className="container">
         <p>Доступ запрещён.</p>
-        <Link href="/" style={{ color: '#4da3ff' }}>
+        <Link href="/" className="link">
           На главную
         </Link>
       </div>
@@ -164,15 +164,17 @@ export default function AdminPage() {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '800px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container" style={{ maxWidth: '760px' }}>
+      <Link href="/" className="link">
         &larr; На главную
       </Link>
-      <h1>Админка: заявки на подписку</h1>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Заявки на подписку
+      </h1>
 
-      {loadError && <p style={{ color: '#ff6b6b' }}>{loadError}</p>}
+      {loadError && <p className="error-text">{loadError}</p>}
 
-      {requests.length === 0 && <p style={{ color: '#aaa' }}>Заявок пока нет.</p>}
+      {requests.length === 0 && <p className="muted">Заявок пока нет.</p>}
 
       {requests.map((r) => {
         const currentSub = subsByUser[r.user_id]
@@ -181,45 +183,37 @@ export default function AdminPage() {
           (!currentSub.expires_at || new Date(currentSub.expires_at) > new Date())
 
         return (
-          <div
-            key={r.id}
-            style={{
-              padding: '16px',
-              marginBottom: '16px',
-              borderRadius: '8px',
-              border: '1px solid #444',
-              background: '#161616',
-            }}
-          >
-            <p style={{ fontWeight: 'bold', marginBottom: '4px' }}>
-              {r.email || r.user_id}
+          <div key={r.id} className="card" style={{ marginBottom: '16px' }}>
+            <p style={{ fontWeight: 700, marginBottom: '4px' }}>{r.email || r.user_id}</p>
+            <p className="muted" style={{ fontSize: '14px', marginBottom: '10px' }}>
+              Запросила план: {r.plan} · заявка от {new Date(r.created_at).toLocaleString('ru-RU')}
             </p>
-            <p style={{ color: '#aaa', fontSize: '14px', marginBottom: '8px' }}>
-              Запросила план: {r.plan} · заявка от{' '}
-              {new Date(r.created_at).toLocaleString('ru-RU')}
-            </p>
-            <p style={{ marginBottom: '12px' }}>
+            <p style={{ marginBottom: '14px' }}>
               Текущий статус:{' '}
-              <span style={{ color: isActiveNow ? '#6bcf7f' : '#ff6b6b' }}>
+              <span
+                style={{
+                  color: isActiveNow ? 'var(--correct)' : 'var(--incorrect)',
+                  fontWeight: 600,
+                }}
+              >
                 {isActiveNow
-                  ? `активна до ${currentSub?.expires_at ? new Date(currentSub.expires_at).toLocaleDateString('ru-RU') : '∞'}`
+                  ? `активна до ${
+                      currentSub?.expires_at
+                        ? new Date(currentSub.expires_at).toLocaleDateString('ru-RU')
+                        : '∞'
+                    }`
                   : 'не активна'}
               </span>
             </p>
 
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '8px', flexWrap: 'wrap' }}>
+            <div className="nav-row" style={{ marginTop: 0, marginBottom: '12px' }}>
               <select
                 value={planDrafts[r.user_id] || r.plan}
                 onChange={(e) =>
                   setPlanDrafts((prev) => ({ ...prev, [r.user_id]: e.target.value }))
                 }
-                style={{
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #444',
-                  background: '#111',
-                  color: '#fff',
-                }}
+                className="input"
+                style={{ width: 'auto' }}
               >
                 <option value="month">1 месяц</option>
                 <option value="half_year">6 месяцев</option>
@@ -232,48 +226,26 @@ export default function AdminPage() {
                 onChange={(e) =>
                   setDateDrafts((prev) => ({ ...prev, [r.user_id]: e.target.value }))
                 }
-                style={{
-                  padding: '8px',
-                  borderRadius: '6px',
-                  border: '1px solid #444',
-                  background: '#111',
-                  color: '#fff',
-                }}
+                className="input"
+                style={{ width: 'auto' }}
               />
 
-              <button
-                onClick={() => quickSetMonths(r.user_id, 1)}
-                style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #444', background: '#222', color: '#fff', cursor: 'pointer' }}
-              >
+              <button onClick={() => quickSetMonths(r.user_id, 1)} className="btn btn-outline">
                 +1 мес
               </button>
-              <button
-                onClick={() => quickSetMonths(r.user_id, 6)}
-                style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #444', background: '#222', color: '#fff', cursor: 'pointer' }}
-              >
+              <button onClick={() => quickSetMonths(r.user_id, 6)} className="btn btn-outline">
                 +6 мес
               </button>
-              <button
-                onClick={() => quickSetMonths(r.user_id, 12)}
-                style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #444', background: '#222', color: '#fff', cursor: 'pointer' }}
-              >
+              <button onClick={() => quickSetMonths(r.user_id, 12)} className="btn btn-outline">
                 +1 год
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '10px' }}>
               <button
                 onClick={() => activate(r.user_id, r.email)}
                 disabled={savingId === r.user_id}
-                style={{
-                  padding: '10px 20px',
-                  borderRadius: '6px',
-                  border: 'none',
-                  background: '#2e7d4f',
-                  color: '#fff',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                }}
+                className="btn btn-primary"
               >
                 {savingId === r.user_id ? 'Сохранение...' : 'Подтвердить и активировать'}
               </button>
@@ -282,14 +254,7 @@ export default function AdminPage() {
                 <button
                   onClick={() => deactivate(r.user_id)}
                   disabled={savingId === r.user_id}
-                  style={{
-                    padding: '10px 20px',
-                    borderRadius: '6px',
-                    border: '1px solid #444',
-                    background: '#222',
-                    color: '#fff',
-                    cursor: 'pointer',
-                  }}
+                  className="btn btn-outline"
                 >
                   Отключить
                 </button>
