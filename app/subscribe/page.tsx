@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../../lib/supabaseClient'
 
 const PLANS = [
   { id: 'month', label: '1 месяц', price: '300 сом' },
@@ -86,10 +86,10 @@ export default function SubscribePage() {
       >
         <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Как оплатить:</p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Переведи сумму выбранного плана на Элсом / О!Деньги: <b>0000 000 000</b>
+          Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
         </p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Пришли скрин перевода в Telegram/WhatsApp: <b>@твой_контакт</b>
+          Пришли скрин перевода в Telegram/WhatsApp: <b>+79312091217</b>
         </p>
         <p style={{ color: '#aaa', fontSize: '14px' }}>
           После проверки оплаты доступ откроется в течение суток.
