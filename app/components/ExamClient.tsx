@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, CSSProperties } from 'react'
+import { useState, useEffect } from 'react'
 
 type Question = {
   id: number
@@ -50,30 +50,16 @@ export default function ExamClient({ questions }: { questions: Question[] }) {
     return q.option_d
   }
 
-  function getButtonStyle(question: Question, option: Option): CSSProperties {
+  function getOptionClass(question: Question, option: Option): string {
     const selected = answers[question.id]
-    const base: CSSProperties = {
-      display: 'block',
-      width: '100%',
-      textAlign: 'left',
-      padding: '10px',
-      marginBottom: '8px',
-      borderRadius: '6px',
-      border: '1px solid #444',
-      cursor: showResults ? 'default' : 'pointer',
-      background: option === selected ? '#22344d' : '#111',
-      color: '#fff',
+
+    if (!showResults) {
+      return option === selected ? 'option-row picked' : 'option-row'
     }
 
-    if (!showResults) return base
-
-    if (option === question.correct_answer) {
-      return { ...base, background: '#1a4d2e', border: '1px solid #2e7d4f' }
-    }
-    if (option === selected) {
-      return { ...base, background: '#4d1a1a', border: '1px solid #7d2e2e' }
-    }
-    return { ...base, opacity: 0.5 }
+    if (option === question.correct_answer) return 'option-row correct'
+    if (option === selected) return 'option-row incorrect'
+    return 'option-row faded'
   }
 
   const options: Option[] = ['a', 'b', 'c', 'd']
@@ -90,68 +76,45 @@ export default function ExamClient({ questions }: { questions: Question[] }) {
 
   return (
     <div>
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          background: '#000',
-          padding: '10px 0',
-          marginBottom: '20px',
-          borderBottom: '1px solid #333',
-          fontWeight: 'bold',
-          fontSize: '18px',
-        }}
-      >
-        Осталось времени: {formatTime(secondsLeft)}
-      </div>
+      <div className="timer-bar">Осталось времени: {formatTime(secondsLeft)}</div>
 
       {showResults && (
-        <div
-          style={{
-            padding: '16px',
-            marginBottom: '24px',
-            borderRadius: '8px',
-            border: '1px solid #444',
-            background: '#161616',
-          }}
-        >
-          <p style={{ fontWeight: 'bold', fontSize: '18px', margin: 0 }}>
+        <div className="banner-success" style={{ marginBottom: '28px' }}>
+          <p style={{ fontWeight: 700, fontSize: '18px', margin: 0 }}>
             Результат: {correctCount} из {questions.length} правильно
           </p>
-          <p style={{ margin: '4px 0 0', color: '#aaa' }}>
+          <p style={{ margin: '4px 0 0' }}>
             Отвечено: {answeredCount} из {questions.length}
           </p>
         </div>
       )}
 
-      {questions.map((q) => (
-        <div key={q.id} style={{ marginBottom: '30px' }}>
-          <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
-          {options.map((opt) => (
-            <button
-              key={opt}
-              style={getButtonStyle(q, opt)}
-              onClick={() => handleSelect(q.id, opt)}
-            >
-              {opt}) {getOptionText(q, opt)}
-            </button>
-          ))}
+      {questions.map((q, i) => (
+        <div key={q.id} className="question">
+          <div className="qnum">{i + 1}</div>
+          <div className="qbody">
+            <p className="qtext" style={{ marginBottom: '14px' }}>
+              {q.question_text}
+            </p>
+            {options.map((opt) => (
+              <button
+                key={opt}
+                className={getOptionClass(q, opt)}
+                onClick={() => handleSelect(q.id, opt)}
+              >
+                <span className="option-marker">{opt}</span>
+                <span>{getOptionText(q, opt)}</span>
+              </button>
+            ))}
+          </div>
         </div>
       ))}
 
       {!showResults && (
         <button
           onClick={() => setShowResults(true)}
-          style={{
-            padding: '12px 24px',
-            borderRadius: '6px',
-            border: 'none',
-            background: '#2e7d4f',
-            color: '#fff',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            marginTop: '10px',
-          }}
+          className="btn btn-primary"
+          style={{ marginTop: '10px' }}
         >
           Завершить экзамен
         </button>
