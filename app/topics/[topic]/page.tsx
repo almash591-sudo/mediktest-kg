@@ -1,5 +1,6 @@
 import { supabase } from '../../../lib/supabaseClient'
 import QuestionList from '../../components/QuestionList'
+import SubscriptionGate from '../../components/SubscriptionGate'
 import Link from 'next/link'
 
 export default async function TopicPage({
@@ -52,7 +53,9 @@ export default async function TopicPage({
         </Link>
       </div>
 
-      <QuestionList questions={questions} reviewMode={reviewMode} />
+      <SubscriptionGate>
+        <QuestionList questions={questions} reviewMode={reviewMode} />
+      </SubscriptionGate>
     </div>
   )
 }
