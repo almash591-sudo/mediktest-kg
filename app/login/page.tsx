@@ -40,79 +40,59 @@ export default function LoginPage() {
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '400px', margin: '0 auto' }}>
-      <h1>{mode === 'signin' ? 'Вход' : 'Регистрация'}</h1>
+    <div className="container" style={{ maxWidth: '420px' }}>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        {mode === 'signin' ? 'Вход' : 'Регистрация'}
+      </h1>
 
       <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '12px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>Email</label>
+        <div style={{ marginBottom: '14px' }}>
+          <label className="muted" style={{ display: 'block', marginBottom: '6px', fontSize: '14px' }}>
+            Email
+          </label>
           <input
             type="email"
+            className="input"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '6px',
-              border: '1px solid #444',
-              background: '#111',
-              color: '#fff',
-            }}
           />
         </div>
 
-        <div style={{ marginBottom: '16px' }}>
-          <label style={{ display: 'block', marginBottom: '4px' }}>Пароль</label>
+        <div style={{ marginBottom: '18px' }}>
+          <label className="muted" style={{ display: 'block', marginBottom: '6px', fontSize: '14px' }}>
+            Пароль
+          </label>
           <input
             type="password"
+            className="input"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
             minLength={6}
-            style={{
-              width: '100%',
-              padding: '10px',
-              borderRadius: '6px',
-              border: '1px solid #444',
-              background: '#111',
-              color: '#fff',
-            }}
           />
         </div>
 
-        {error && (
-          <p style={{ color: '#ff6b6b', marginBottom: '12px' }}>{error}</p>
-        )}
+        {error && <p className="error-text">{error}</p>}
         {message && (
-          <p style={{ color: '#6bcf7f', marginBottom: '12px' }}>{message}</p>
+          <p className="success-text" style={{ marginBottom: '12px' }}>
+            {message}
+          </p>
         )}
 
-        <button
-          type="submit"
-          disabled={loading}
-          style={{
-            width: '100%',
-            padding: '12px',
-            borderRadius: '6px',
-            border: 'none',
-            background: '#2e7d4f',
-            color: '#fff',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-          }}
-        >
+        <button type="submit" disabled={loading} className="btn btn-primary" style={{ width: '100%' }}>
           {loading ? 'Подождите...' : mode === 'signin' ? 'Войти' : 'Зарегистрироваться'}
         </button>
       </form>
 
-      <p style={{ marginTop: '16px' }}>
+      <p className="muted" style={{ marginTop: '18px', fontSize: '14px' }}>
         {mode === 'signin' ? (
           <>
             Нет аккаунта?{' '}
             <button
               onClick={() => setMode('signup')}
-              style={{ color: '#4da3ff', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              className="link"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
             >
               Зарегистрироваться
             </button>
@@ -122,7 +102,8 @@ export default function LoginPage() {
             Уже есть аккаунт?{' '}
             <button
               onClick={() => setMode('signin')}
-              style={{ color: '#4da3ff', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+              className="link"
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, font: 'inherit' }}
             >
               Войти
             </button>
