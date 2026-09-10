@@ -59,18 +59,20 @@ export default function MistakesPage() {
   }, [])
 
   return (
-    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container">
+      <Link href="/" className="link">
         &larr; Назад
       </Link>
-      <h1>Мои ошибки</h1>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Мои ошибки
+      </h1>
 
-      {loading && <p>Загрузка...</p>}
+      {loading && <p className="muted">Загрузка...</p>}
 
       {!loading && !loggedIn && (
-        <p>
+        <p className="muted">
           Чтобы видеть свои ошибки, нужно{' '}
-          <Link href="/login" style={{ color: '#4da3ff' }}>
+          <Link href="/login" className="link">
             войти в аккаунт
           </Link>
           .
@@ -78,12 +80,12 @@ export default function MistakesPage() {
       )}
 
       {!loading && loggedIn && questions.length === 0 && (
-        <p>Пока нет ни одной ошибки — либо ты всё решаешь верно, либо ещё не проходила тесты.</p>
+        <p className="muted">
+          Пока нет ни одной ошибки — либо ты всё решаешь верно, либо ещё не проходила тесты.
+        </p>
       )}
 
-      {!loading && loggedIn && questions.length > 0 && (
-        <QuestionList questions={questions} />
-      )}
+      {!loading && loggedIn && questions.length > 0 && <QuestionList questions={questions} />}
     </div>
   )
 }
