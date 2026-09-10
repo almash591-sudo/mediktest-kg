@@ -31,7 +31,7 @@ export default function SubscribePage() {
 
     const { error: insertError } = await supabase
       .from('subscription_requests')
-      .insert({ user_id: uid, plan: selectedPlan })
+      .insert({ user_id: uid, plan: selectedPlan, email: userData.user?.email })
 
     setLoading(false)
 
@@ -89,7 +89,7 @@ export default function SubscribePage() {
           Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
         </p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Пришли скрин перевода в Telegram/WhatsApp: <b>+79312091217</b>
+          Пришли скрин перевода в Telegram/WhatsApp: <b>+79213091217</b>
         </p>
         <p style={{ color: '#aaa', fontSize: '14px' }}>
           После проверки оплаты доступ откроется в течение суток.
