@@ -86,99 +86,64 @@ export default function SubscribePage() {
     PLANS.find((p) => p.id === id)?.label ?? id ?? ''
 
   return (
-    <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container" style={{ maxWidth: '560px' }}>
+      <Link href="/" className="link">
         &larr; Назад
       </Link>
-      <h1>Подписка</h1>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Подписка
+      </h1>
 
       {!statusLoading && status && (
         <div
-          style={{
-            padding: '16px',
-            borderRadius: '8px',
-            border: '1px solid #444',
-            background: status.isActive ? '#1a4d2e' : '#161616',
-            marginBottom: '20px',
-          }}
+          className={status.isActive ? 'banner-success' : 'banner-muted'}
+          style={{ marginBottom: '20px' }}
         >
           {status.isActive ? (
             <p style={{ margin: 0 }}>
-              ✅ Подписка активна ({planLabel(status.plan)})
+              Подписка активна ({planLabel(status.plan)})
               {status.expiresAt && (
                 <> — до {new Date(status.expiresAt).toLocaleDateString('ru-RU')}</>
               )}
             </p>
           ) : (
-            <p style={{ margin: 0, color: '#aaa' }}>
+            <p style={{ margin: 0 }}>
               Подписка сейчас не активна. Выбери план ниже, чтобы оформить.
             </p>
           )}
         </div>
       )}
 
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
+      <div className="nav-row" style={{ marginTop: 0 }}>
         {PLANS.map((plan) => (
           <button
             key={plan.id}
             onClick={() => setSelectedPlan(plan.id)}
-            style={{
-              flex: '1 1 150px',
-              padding: '16px',
-              borderRadius: '8px',
-              border:
-                selectedPlan === plan.id
-                  ? '2px solid #2e7d4f'
-                  : '1px solid #444',
-              background: selectedPlan === plan.id ? '#1a4d2e' : '#161616',
-              color: '#fff',
-              cursor: 'pointer',
-              textAlign: 'left',
-            }}
+            className={`plan-card${selectedPlan === plan.id ? ' selected' : ''}`}
           >
-            <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>{plan.label}</div>
-            <div style={{ color: '#aaa' }}>{plan.price}</div>
+            <div style={{ fontWeight: 700, marginBottom: '4px' }}>{plan.label}</div>
+            <div className="muted">{plan.price}</div>
           </button>
         ))}
       </div>
 
-      <div
-        style={{
-          padding: '16px',
-          borderRadius: '8px',
-          border: '1px solid #444',
-          background: '#161616',
-          marginBottom: '20px',
-        }}
-      >
-        <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Как оплатить:</p>
-        <p style={{ color: '#ccc', marginBottom: '4px' }}>
+      <div className="card" style={{ marginBottom: '20px' }}>
+        <p style={{ fontWeight: 700, marginBottom: '8px' }}>Как оплатить</p>
+        <p style={{ marginBottom: '4px' }}>
           Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
         </p>
-        <p style={{ color: '#ccc', marginBottom: '4px' }}>
+        <p style={{ marginBottom: '4px' }}>
           Пришли скрин перевода в Telegram/WhatsApp: <b>+79312091217</b>
         </p>
-        <p style={{ color: '#aaa', fontSize: '14px' }}>
+        <p className="muted" style={{ fontSize: '14px' }}>
           После проверки оплаты доступ откроется в течение суток.
         </p>
       </div>
 
       {!submitted ? (
         <>
-          {error && <p style={{ color: '#ff6b6b', marginBottom: '12px' }}>{error}</p>}
-          <button
-            onClick={handleSubmit}
-            disabled={loading}
-            style={{
-              padding: '12px 24px',
-              borderRadius: '6px',
-              border: 'none',
-              background: '#2e7d4f',
-              color: '#fff',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-            }}
-          >
+          {error && <p className="error-text">{error}</p>}
+          <button onClick={handleSubmit} disabled={loading} className="btn btn-primary">
             {loading
               ? 'Отправка...'
               : status?.isActive
@@ -187,7 +152,7 @@ export default function SubscribePage() {
           </button>
         </>
       ) : (
-        <p style={{ color: '#6bcf7f', fontWeight: 'bold' }}>
+        <p className="success-text">
           Заявка отправлена. Доступ откроется после проверки оплаты.
         </p>
       )}
