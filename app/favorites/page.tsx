@@ -59,18 +59,20 @@ export default function FavoritesPage() {
   }, [])
 
   return (
-    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container">
+      <Link href="/" className="link">
         &larr; Назад
       </Link>
-      <h1>Избранное</h1>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Избранное
+      </h1>
 
-      {loading && <p>Загрузка...</p>}
+      {loading && <p className="muted">Загрузка...</p>}
 
       {!loading && !loggedIn && (
-        <p>
+        <p className="muted">
           Чтобы видеть избранное, нужно{' '}
-          <Link href="/login" style={{ color: '#4da3ff' }}>
+          <Link href="/login" className="link">
             войти в аккаунт
           </Link>
           .
@@ -78,12 +80,12 @@ export default function FavoritesPage() {
       )}
 
       {!loading && loggedIn && questions.length === 0 && (
-        <p>Пока нет вопросов в избранном — нажми на звёздочку рядом с вопросом, чтобы добавить.</p>
+        <p className="muted">
+          Пока нет вопросов в избранном — нажми на звёздочку рядом с вопросом, чтобы добавить.
+        </p>
       )}
 
-      {!loading && loggedIn && questions.length > 0 && (
-        <QuestionList questions={questions} />
-      )}
+      {!loading && loggedIn && questions.length > 0 && <QuestionList questions={questions} />}
     </div>
   )
 }
