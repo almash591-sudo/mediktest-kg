@@ -22,33 +22,28 @@ export default async function BlockPage({
     .eq('block_number', blockNumber)
 
   if (error) {
-    return <div>Ошибка: {error.message}</div>
+    return <div className="container">Ошибка: {error.message}</div>
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container">
+      <Link href="/" className="link">
         &larr; Назад
       </Link>
-      <h1>Блок {blockNumber}</h1>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Блок {blockNumber}
+      </h1>
 
-      <div style={{ marginBottom: '20px' }}>
+      <div className="nav-row" style={{ marginTop: 0 }}>
         <Link
           href={`/blocks/${blockNumber}`}
-          style={{
-            marginRight: '16px',
-            color: reviewMode ? '#4da3ff' : '#fff',
-            fontWeight: reviewMode ? 'normal' : 'bold',
-          }}
+          className={reviewMode ? 'btn btn-outline' : 'btn btn-primary'}
         >
           Тренировка
         </Link>
         <Link
           href={`/blocks/${blockNumber}?mode=review`}
-          style={{
-            color: reviewMode ? '#fff' : '#4da3ff',
-            fontWeight: reviewMode ? 'bold' : 'normal',
-          }}
+          className={reviewMode ? 'btn btn-primary' : 'btn btn-outline'}
         >
           Просмотр с ответами
         </Link>
