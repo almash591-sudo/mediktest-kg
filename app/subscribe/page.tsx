@@ -86,10 +86,10 @@ export default function SubscribePage() {
       >
         <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>Как оплатить:</p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
+          Переведи сумму выбранного плана на Элсом / О!Деньги: <b>0000 000 000</b>
         </p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Пришли скрин перевода в Telegram/WhatsApp: <b>+79213091217</b>
+          Пришли скрин перевода в Telegram/WhatsApp: <b>@твой_контакт</b>
         </p>
         <p style={{ color: '#aaa', fontSize: '14px' }}>
           После проверки оплаты доступ откроется в течение суток.
