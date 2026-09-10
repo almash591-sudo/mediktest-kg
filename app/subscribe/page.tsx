@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabaseClient'
 
@@ -10,11 +10,50 @@ const PLANS = [
   { id: 'year', label: '1 год', price: '2500 сом' },
 ]
 
+type SubStatus = {
+  isActive: boolean
+  expiresAt: string | null
+  plan: string | null
+}
+
 export default function SubscribePage() {
   const [selectedPlan, setSelectedPlan] = useState('month')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState<SubStatus | null>(null)
+  const [statusLoading, setStatusLoading] = useState(true)
+
+  useEffect(() => {
+    loadStatus()
+  }, [])
+
+  async function loadStatus() {
+    setStatusLoading(true)
+    const { data: userData } = await supabase.auth.getUser()
+    const uid = userData.user?.id
+
+    if (!uid) {
+      setStatus(null)
+      setStatusLoading(false)
+      return
+    }
+
+    const { data } = await supabase
+      .from('subscriptions')
+      .select('is_active, expires_at, plan')
+      .eq('user_id', uid)
+      .maybeSingle()
+
+    if (data) {
+      const active =
+        !!data.is_active && (!data.expires_at || new Date(data.expires_at) > new Date())
+      setStatus({ isActive: active, expiresAt: data.expires_at, plan: data.plan })
+    } else {
+      setStatus({ isActive: false, expiresAt: null, plan: null })
+    }
+    setStatusLoading(false)
+  }
 
   async function handleSubmit() {
     setError('')
@@ -43,12 +82,40 @@ export default function SubscribePage() {
     setSubmitted(true)
   }
 
+  const planLabel = (id: string | null) =>
+    PLANS.find((p) => p.id === id)?.label ?? id ?? ''
+
   return (
     <div style={{ padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
       <Link href="/" style={{ color: '#4da3ff' }}>
         &larr; Назад
       </Link>
       <h1>Подписка</h1>
+
+      {!statusLoading && status && (
+        <div
+          style={{
+            padding: '16px',
+            borderRadius: '8px',
+            border: '1px solid #444',
+            background: status.isActive ? '#1a4d2e' : '#161616',
+            marginBottom: '20px',
+          }}
+        >
+          {status.isActive ? (
+            <p style={{ margin: 0 }}>
+              ✅ Подписка активна ({planLabel(status.plan)})
+              {status.expiresAt && (
+                <> — до {new Date(status.expiresAt).toLocaleDateString('ru-RU')}</>
+              )}
+            </p>
+          ) : (
+            <p style={{ margin: 0, color: '#aaa' }}>
+              Подписка сейчас не активна. Выбери план ниже, чтобы оформить.
+            </p>
+          )}
+        </div>
+      )}
 
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px', flexWrap: 'wrap' }}>
         {PLANS.map((plan) => (
@@ -89,7 +156,7 @@ export default function SubscribePage() {
           Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
         </p>
         <p style={{ color: '#ccc', marginBottom: '4px' }}>
-          Пришли скрин перевода в Telegram/WhatsApp: <b>+79213091217</b>
+          Пришли скрин перевода в Telegram/WhatsApp: <b>+79312091217</b>
         </p>
         <p style={{ color: '#aaa', fontSize: '14px' }}>
           После проверки оплаты доступ откроется в течение суток.
@@ -112,7 +179,11 @@ export default function SubscribePage() {
               cursor: 'pointer',
             }}
           >
-            {loading ? 'Отправка...' : 'Я оплатил(а), отправить заявку'}
+            {loading
+              ? 'Отправка...'
+              : status?.isActive
+              ? 'Продлить подписку, отправить заявку'
+              : 'Я оплатил(а), отправить заявку'}
           </button>
         </>
       ) : (
