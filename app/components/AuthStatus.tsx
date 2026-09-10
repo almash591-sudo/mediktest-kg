@@ -33,36 +33,21 @@ export default function AuthStatus() {
   if (!loaded) return null
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '16px',
-        fontSize: '14px',
-        color: '#aaa',
-      }}
-    >
+    <div className="topbar">
       {email ? (
         <>
-          <span>Вы вошли как: {email}</span>
+          <span>Вы вошли как {email}</span>
           <button
             onClick={handleLogout}
-            style={{
-              background: 'none',
-              border: '1px solid #444',
-              color: '#fff',
-              padding: '6px 12px',
-              borderRadius: '6px',
-              cursor: 'pointer',
-            }}
+            className="btn btn-outline"
+            style={{ padding: '6px 14px', fontSize: '13px' }}
           >
             Выйти
           </button>
         </>
       ) : (
-        <a href="/login" style={{ color: '#4da3ff' }}>
-          Войти / Зарегистрироваться
+        <a href="/login" className="link">
+          Войти или зарегистрироваться
         </a>
       )}
     </div>
