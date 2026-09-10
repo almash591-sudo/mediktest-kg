@@ -67,13 +67,31 @@ export default async function Home() {
         >
           Избранное
         </Link>
+        <Link
+          href="/subscribe"
+          style={{
+            display: 'inline-block',
+            padding: '12px 20px',
+            borderRadius: '6px',
+            background: '#7a5b1a',
+            color: '#fff',
+            fontWeight: 'bold',
+            textDecoration: 'none',
+          }}
+        >
+          Подписка
+        </Link>
       </div>
+
+      <p style={{ color: '#aaa', marginBottom: '20px' }}>
+        Блок 1 доступен бесплатно. Остальные блоки, темы и экзамен — по подписке.
+      </p>
 
       <h2>Блоки</h2>
       {blocks.map((b) => (
         <div key={b} style={{ marginBottom: '8px' }}>
           <Link href={`/blocks/${b}`} style={{ color: '#4da3ff' }}>
-            Блок {b}
+            Блок {b} {b !== 1 ? '🔒' : ''}
           </Link>
         </div>
       ))}
@@ -82,7 +100,7 @@ export default async function Home() {
       {topics.map((t) => (
         <div key={t} style={{ marginBottom: '8px' }}>
           <Link href={`/topics/${encodeURIComponent(t)}`} style={{ color: '#4da3ff' }}>
-            {t}
+            {t} 🔒
           </Link>
         </div>
       ))}
