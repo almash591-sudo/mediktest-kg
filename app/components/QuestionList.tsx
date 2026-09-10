@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, CSSProperties } from 'react'
+import { useState, useEffect } from 'react'
 import { supabase } from '../../lib/supabaseClient'
 
 type Question = {
@@ -116,33 +116,20 @@ export default function QuestionList({
     return q.option_d
   }
 
-  function getButtonStyle(question: Question, option: Option): CSSProperties {
+  function getOptionClass(question: Question, option: Option): string {
     const selected = reviewMode
       ? (question.correct_answer as Option)
       : answers[question.id]
 
-    const base: CSSProperties = {
-      display: 'block',
-      width: '100%',
-      textAlign: 'left',
-      padding: '10px',
-      marginBottom: '8px',
-      borderRadius: '6px',
-      border: '1px solid #444',
-      cursor: reviewMode || selected ? 'default' : 'pointer',
-      background: '#111',
-      color: '#fff',
-    }
-
-    if (!selected) return base
+    if (!selected) return 'option-row'
 
     if (option === question.correct_answer) {
-      return { ...base, background: '#1a4d2e', border: '1px solid #2e7d4f' }
+      return 'option-row correct'
     }
     if (option === selected) {
-      return { ...base, background: '#4d1a1a', border: '1px solid #7d2e2e' }
+      return 'option-row incorrect'
     }
-    return { ...base, opacity: 0.5 }
+    return 'option-row faded'
   }
 
   const options: Option[] = ['a', 'b', 'c', 'd']
@@ -164,91 +151,51 @@ export default function QuestionList({
   return (
     <div>
       {!reviewMode && showResults && (
-        <div
-          style={{
-            padding: '16px',
-            marginBottom: '24px',
-            borderRadius: '8px',
-            border: '1px solid #444',
-            background: '#161616',
-          }}
-        >
-          <p style={{ fontWeight: 'bold', fontSize: '18px', margin: 0 }}>
+        <div className="banner-success" style={{ marginBottom: '28px' }}>
+          <p style={{ fontWeight: 700, fontSize: '18px', margin: 0 }}>
             Результат: {correctCount} из {questions.length} правильно
           </p>
-          <p style={{ margin: '4px 0 12px', color: '#aaa' }}>
+          <p style={{ margin: '4px 0 14px' }}>
             Отвечено: {answeredCount} из {questions.length}
           </p>
-          <button
-            onClick={handleRestart}
-            style={{
-              padding: '8px 16px',
-              borderRadius: '6px',
-              border: '1px solid #444',
-              background: '#222',
-              color: '#fff',
-              cursor: 'pointer',
-            }}
-          >
+          <button onClick={handleRestart} className="btn btn-outline">
             Пройти заново (на экране)
           </button>
         </div>
       )}
 
-      {questions.map((q) => (
-        <div key={q.id} style={{ marginBottom: '30px' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              gap: '10px',
-            }}
-          >
-            <p style={{ fontWeight: 'bold' }}>{q.question_text}</p>
-            {!reviewMode && (
+      {questions.map((q, i) => (
+        <div key={q.id} className="question">
+          <div className="qnum">{i + 1}</div>
+          <div className="qbody">
+            <div className="qtext-row">
+              <p className="qtext">{q.question_text}</p>
+              {!reviewMode && (
+                <button
+                  onClick={() => toggleFavorite(q.id)}
+                  title="В избранное"
+                  className={`fav-btn${favorites[q.id] ? ' active' : ''}`}
+                >
+                  {favorites[q.id] ? '★' : '☆'}
+                </button>
+              )}
+            </div>
+            {options.map((opt) => (
               <button
-                onClick={() => toggleFavorite(q.id)}
-                title="В избранное"
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  cursor: 'pointer',
-                  fontSize: '20px',
-                  color: favorites[q.id] ? '#ffd166' : '#555',
-                  flexShrink: 0,
-                }}
+                key={opt}
+                className={getOptionClass(q, opt)}
+                onClick={() => handleSelect(q.id, opt)}
               >
-                {favorites[q.id] ? '★' : '☆'}
+                <span className="option-marker">{opt}</span>
+                <span>{getOptionText(q, opt)}</span>
               </button>
-            )}
+            ))}
           </div>
-          {options.map((opt) => (
-            <button
-              key={opt}
-              style={getButtonStyle(q, opt)}
-              onClick={() => handleSelect(q.id, opt)}
-            >
-              {opt}) {getOptionText(q, opt)}
-            </button>
-          ))}
         </div>
       ))}
 
       {!reviewMode && !showResults && (
-        <button
-          onClick={handleFinish}
-          style={{
-            padding: '12px 24px',
-            borderRadius: '6px',
-            border: 'none',
-            background: '#2e7d4f',
-            color: '#fff',
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            marginTop: '10px',
-          }}
-        >
+        <button onClick={handleFinish} className="btn btn-primary" style={{ marginTop: '10px' }}>
           Завершить тест
         </button>
       )}
