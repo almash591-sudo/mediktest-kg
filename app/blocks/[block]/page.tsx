@@ -1,5 +1,6 @@
 import { supabase } from '../../../lib/supabaseClient'
 import QuestionList from '../../components/QuestionList'
+import SubscriptionGate from '../../components/SubscriptionGate'
 import Link from 'next/link'
 
 export default async function BlockPage({
@@ -13,6 +14,7 @@ export default async function BlockPage({
   const { mode } = await searchParams
   const blockNumber = Number(block)
   const reviewMode = mode === 'review'
+  const isFree = blockNumber === 1
 
   const { data: questions, error } = await supabase
     .from('questions')
@@ -52,7 +54,9 @@ export default async function BlockPage({
         </Link>
       </div>
 
-      <QuestionList questions={questions} reviewMode={reviewMode} />
+      <SubscriptionGate isFree={isFree}>
+        <QuestionList questions={questions} reviewMode={reviewMode} />
+      </SubscriptionGate>
     </div>
   )
 }
