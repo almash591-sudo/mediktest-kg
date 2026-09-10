@@ -46,38 +46,20 @@ export default function SubscriptionGate({
     check()
   }, [isFree])
 
-  if (status === 'loading') return <p style={{ color: '#aaa' }}>Загрузка...</p>
+  if (status === 'loading') return <p className="muted">Загрузка...</p>
   if (status === 'free' || status === 'allowed') return <>{children}</>
 
   return (
-    <div
-      style={{
-        padding: '20px',
-        border: '1px solid #444',
-        borderRadius: '8px',
-        background: '#161616',
-      }}
-    >
-      <p style={{ fontWeight: 'bold', marginBottom: '8px', fontSize: '18px' }}>
+    <div className="card">
+      <p style={{ fontWeight: 700, marginBottom: '8px', fontSize: '18px' }}>
         Доступно по подписке
       </p>
-      <p style={{ color: '#aaa', marginBottom: '16px' }}>
+      <p className="muted" style={{ marginBottom: '16px' }}>
         {status === 'guest'
           ? 'Чтобы открыть этот раздел, сначала войдите в аккаунт, затем оформите подписку.'
           : 'Этот раздел доступен только с активной подпиской.'}
       </p>
-      <Link
-        href={status === 'guest' ? '/login' : '/subscribe'}
-        style={{
-          display: 'inline-block',
-          padding: '10px 20px',
-          borderRadius: '6px',
-          background: '#2e7d4f',
-          color: '#fff',
-          fontWeight: 'bold',
-          textDecoration: 'none',
-        }}
-      >
+      <Link href={status === 'guest' ? '/login' : '/subscribe'} className="btn btn-primary">
         {status === 'guest' ? 'Войти' : 'Оформить подписку'}
       </Link>
     </div>
