@@ -9,19 +9,21 @@ export default async function ExamPage() {
   const { data: questions, error } = await supabase.from('questions').select('*')
 
   if (error) {
-    return <div>Ошибка: {error.message}</div>
+    return <div className="container">Ошибка: {error.message}</div>
   }
 
   const shuffled = [...questions].sort(() => Math.random() - 0.5)
   const examQuestions = shuffled.slice(0, EXAM_QUESTION_COUNT)
 
   return (
-    <div style={{ padding: '20px', maxWidth: '700px', margin: '0 auto' }}>
-      <Link href="/" style={{ color: '#4da3ff' }}>
+    <div className="container">
+      <Link href="/" className="link">
         &larr; Назад
       </Link>
-      <h1>Экзамен</h1>
-      <p style={{ color: '#aaa' }}>
+      <h1 className="wordmark" style={{ fontSize: '24px' }}>
+        Экзамен
+      </h1>
+      <p className="muted" style={{ marginBottom: '20px' }}>
         Вопросов: {examQuestions.length}. Время: 50 минут.
       </p>
       <SubscriptionGate>
