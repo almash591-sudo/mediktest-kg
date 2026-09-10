@@ -1,26 +1,315 @@
-@import "tailwindcss";
-
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --paper: #F2F4F1;
+  --surface: #FFFFFF;
+  --ink: #202B29;
+  --ink-muted: #6B7570;
+  --accent: #1F6F64;
+  --accent-dark: #17564D;
+  --correct: #3F7A4F;
+  --correct-bg: #E7F1E9;
+  --incorrect: #B14834;
+  --incorrect-bg: #F6E7E3;
+  --border: #DEDFD6;
+  --locked-bg: #ECEAE2;
+  --radius: 4px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html, body {
+  padding: 0;
+  margin: 0;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans), 'IBM Plex Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+}
+
+.container {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+}
+
+.wordmark {
+  font-family: var(--font-serif), 'IBM Plex Serif', serif;
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin: 4px 0 24px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 16px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+  color: var(--ink-muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color .15s ease, border-color .15s ease, color .15s ease;
+  text-decoration: none;
+}
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover {
+  background: var(--accent-dark);
+}
+.btn-outline {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--ink);
+}
+.btn-outline:hover {
+  border-color: var(--ink-muted);
+}
+.btn:disabled {
+  opacity: .6;
+  cursor: default;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: none;
+}
+.link:hover {
+  text-decoration: underline;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 20px;
+}
+
+.banner-success {
+  background: var(--correct-bg);
+  border: 1px solid var(--correct);
+  color: var(--correct);
+  border-radius: 6px;
+  padding: 16px 20px;
+}
+.banner-muted {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  color: var(--ink-muted);
+}
+
+.nav-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 20px 0 28px;
+}
+
+.list-link-row {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+.list-link-row:last-child {
+  border-bottom: none;
+}
+
+.section-heading {
+  font-family: var(--font-serif), 'IBM Plex Serif', serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin: 32px 0 12px;
+}
+
+.question {
+  padding: 28px 0;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 16px;
+}
+.question:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.qnum {
+  font-family: var(--font-serif), 'IBM Plex Serif', serif;
+  font-size: 22px;
+  color: var(--ink-muted);
+  min-width: 34px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.qbody {
+  flex: 1;
+  min-width: 0;
+}
+.qtext-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.qtext {
+  font-weight: 600;
+  line-height: 1.5;
+  margin: 0;
+}
+.fav-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 19px;
+  color: var(--ink-muted);
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 2px;
+}
+.fav-btn.active {
+  color: #C9A227;
+}
+
+.option-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--ink);
+  transition: background-color .15s ease, border-color .15s ease;
+}
+.option-marker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-muted);
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+.option-row.picked {
+  border-color: var(--accent);
+  background: #E6F0EE;
+}
+.option-row.correct {
+  background: var(--correct-bg);
+  border-color: var(--correct);
+}
+.option-row.correct .option-marker {
+  border-color: var(--correct);
+  background: var(--correct);
+  color: #fff;
+}
+.option-row.incorrect {
+  background: var(--incorrect-bg);
+  border-color: var(--incorrect);
+}
+.option-row.incorrect .option-marker {
+  border-color: var(--incorrect);
+  background: var(--incorrect);
+  color: #fff;
+}
+.option-row.faded {
+  opacity: .55;
+}
+
+.locked-badge {
+  font-size: 12px;
+  color: var(--ink-muted);
+  border: 1px solid var(--border);
+  background: var(--locked-bg);
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-left: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 15px;
+}
+
+.timer-bar {
+  position: sticky;
+  top: 0;
+  background: var(--paper);
+  padding: 12px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-serif), 'IBM Plex Serif', serif;
+  font-size: 18px;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.plan-card {
+  flex: 1 1 150px;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  cursor: pointer;
+  text-align: left;
+}
+.plan-card.selected {
+  border-color: var(--accent);
+  background: var(--correct-bg);
+}
+
+.error-text {
+  color: var(--incorrect);
+  margin-bottom: 12px;
+}
+.success-text {
+  color: var(--correct);
+  font-weight: 600;
+}
+.muted {
+  color: var(--ink-muted);
 }
