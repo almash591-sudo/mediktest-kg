@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { supabase } from '../../lib/supabaseClient'
+import ThemeToggle from './ThemeToggle'
 
 export default function AuthStatus() {
   const router = useRouter()
@@ -34,22 +35,23 @@ export default function AuthStatus() {
 
   return (
     <div className="topbar">
-      {email ? (
-        <>
-          <span>Вы вошли как {email}</span>
-          <button
-            onClick={handleLogout}
-            className="btn btn-outline"
-            style={{ padding: '6px 14px', fontSize: '13px' }}
-          >
-            Выйти
-          </button>
-        </>
-      ) : (
+      {email ? <span>Вы вошли как {email}</span> : (
         <a href="/login" className="link">
           Войти или зарегистрироваться
         </a>
       )}
+      <div className="topbar-right">
+        <ThemeToggle />
+        {email && (
+          <button
+            onClick={handleLogout}
+            className="btn btn-outline"
+            style={{ padding: '6px 14px', fontSize: '13px', minHeight: 'auto' }}
+          >
+            Выйти
+          </button>
+        )}
+      </div>
     </div>
   )
 }
