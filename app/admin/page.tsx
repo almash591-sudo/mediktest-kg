@@ -172,6 +172,12 @@ export default function AdminPage() {
         Заявки на подписку
       </h1>
 
+      <div className="nav-row" style={{ marginTop: 0 }}>
+        <Link href="/admin/questions" className="btn btn-outline">
+          Управление вопросами
+        </Link>
+      </div>
+
       {loadError && <p className="error-text">{loadError}</p>}
 
       {requests.length === 0 && <p className="muted">Заявок пока нет.</p>}
