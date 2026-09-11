@@ -18,11 +18,22 @@ const plexSerif = IBM_Plex_Serif({
 export const metadata: Metadata = {
   title: 'МедикТест КР',
   description: 'Подготовка к аккредитации для медиков Кыргызстана',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'МедикТест',
+  },
+  icons: {
+    icon: '/icons/icon-192.png',
+    apple: '/icons/apple-touch-icon.png',
+  },
 }
 
 export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
+  themeColor: '#1F6F64',
 }
 
 const themeInitScript = `
