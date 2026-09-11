@@ -176,6 +176,12 @@ export default function AdminPage() {
         <Link href="/admin/questions" className="btn btn-outline">
           Управление вопросами
         </Link>
+        <Link href="/admin/import" className="btn btn-outline">
+          Импорт CSV
+        </Link>
+        <Link href="/admin/structure" className="btn btn-outline">
+          Структура базы
+        </Link>
       </div>
 
       {loadError && <p className="error-text">{loadError}</p>}
