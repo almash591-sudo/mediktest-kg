@@ -3,8 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../lib/supabaseClient'
-
-const ADMIN_EMAIL = 'almash591@gmail.com'
+import AdminGate from '../components/AdminGate'
 
 type Request = {
   id: number
@@ -32,8 +31,6 @@ function toDateInputValue(date: Date) {
 }
 
 export default function AdminPage() {
-  const [checking, setChecking] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
   const [requests, setRequests] = useState<Request[]>([])
   const [subsByUser, setSubsByUser] = useState<Record<string, Subscription>>({})
   const [planDrafts, setPlanDrafts] = useState<Record<string, string>>({})
@@ -42,20 +39,7 @@ export default function AdminPage() {
   const [loadError, setLoadError] = useState('')
 
   useEffect(() => {
-    async function init() {
-      const { data: userData } = await supabase.auth.getUser()
-      const email = userData.user?.email
-
-      if (email !== ADMIN_EMAIL) {
-        setIsAdmin(false)
-        setChecking(false)
-        return
-      }
-      setIsAdmin(true)
-      setChecking(false)
-      await loadData()
-    }
-    init()
+    loadData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -148,22 +132,8 @@ export default function AdminPage() {
     await loadData()
   }
 
-  if (checking) {
-    return <div className="container">Проверка доступа...</div>
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="container">
-        <p>Доступ запрещён.</p>
-        <Link href="/" className="link">
-          На главную
-        </Link>
-      </div>
-    )
-  }
-
   return (
+    <AdminGate>
     <div className="container" style={{ maxWidth: '760px' }}>
       <Link href="/" className="link">
         &larr; На главную
@@ -276,5 +246,6 @@ export default function AdminPage() {
         )
       })}
     </div>
+    </AdminGate>
   )
 }
