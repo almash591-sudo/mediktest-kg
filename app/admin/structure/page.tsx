@@ -3,8 +3,7 @@
 import { useEffect, useState, useMemo } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../../lib/supabaseClient'
-
-const ADMIN_EMAIL = 'almash591@gmail.com'
+import AdminGate from '../../components/AdminGate'
 
 type Row = {
   specialty: string | null
@@ -48,9 +47,6 @@ async function fetchAllRows(): Promise<Row[]> {
 }
 
 export default function AdminStructurePage() {
-  const [checking, setChecking] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
-
   const [rows, setRows] = useState<Row[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
@@ -75,19 +71,8 @@ export default function AdminStructurePage() {
   }
 
   useEffect(() => {
-    async function init() {
-      const { data: userData } = await supabase.auth.getUser()
-      const email = userData.user?.email
-      if (email !== ADMIN_EMAIL) {
-        setIsAdmin(false)
-        setChecking(false)
-        return
-      }
-      setIsAdmin(true)
-      setChecking(false)
-      await load()
-    }
-    init()
+    load()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const groups: Group[] = useMemo(() => {
@@ -170,21 +155,6 @@ export default function AdminStructurePage() {
     await load()
   }
 
-  if (checking) {
-    return <div className="container">Проверка доступа...</div>
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="container">
-        <p>Доступ запрещён.</p>
-        <Link href="/" className="link">
-          На главную
-        </Link>
-      </div>
-    )
-  }
-
   const SortHeader = ({ label, k }: { label: string; k: SortKey }) => (
     <button
       onClick={() => toggleSort(k)}
@@ -203,6 +173,7 @@ export default function AdminStructurePage() {
   )
 
   return (
+    <AdminGate>
     <div className="container" style={{ maxWidth: '900px' }}>
       <Link href="/admin" className="link">
         &larr; В админку
@@ -306,5 +277,6 @@ export default function AdminStructurePage() {
         </>
       )}
     </div>
+    </AdminGate>
   )
 }
