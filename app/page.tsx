@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { supabase } from '../lib/supabaseClient'
 import AuthStatus from './components/AuthStatus'
+import SecretAdminAccess from './components/SecretAdminAccess'
 
 export default function Home() {
   const [blocks, setBlocks] = useState<number[]>([])
@@ -63,7 +64,7 @@ export default function Home() {
     <div className="container">
       <AuthStatus />
 
-      <h1 className="wordmark">МедикТест КР</h1>
+      <SecretAdminAccess />
 
       <div className="nav-row">
         <Link href="/exam" className="btn btn-primary">Начать экзамен</Link>
