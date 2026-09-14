@@ -399,3 +399,7 @@ button {
     font-size: 13px;
   }
 }
+
+.locked-tile {
+  opacity: .65;
+}
