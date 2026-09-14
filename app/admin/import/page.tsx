@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Papa from 'papaparse'
 import { supabase } from '../../../lib/supabaseClient'
+import AdminGate from '../../components/AdminGate'
 
-const ADMIN_EMAIL = 'almash591@gmail.com'
 const BATCH_SIZE = 500
 
 type CsvRow = Record<string, string>
@@ -23,10 +23,6 @@ type ParsedQuestion = {
 }
 
 export default function AdminImportPage() {
-  const [checking, setChecking] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [checked, setChecked] = useState(false)
-
   const [csvText, setCsvText] = useState('')
   const [rows, setRows] = useState<CsvRow[]>([])
   const [parseError, setParseError] = useState('')
@@ -41,16 +37,6 @@ export default function AdminImportPage() {
   const [progress, setProgress] = useState<{ done: number; total: number } | null>(null)
   const [resultMessage, setResultMessage] = useState('')
   const [importErrors, setImportErrors] = useState<string[]>([])
-
-  useState(() => {
-    async function init() {
-      const { data: userData } = await supabase.auth.getUser()
-      setIsAdmin(userData.user?.email === ADMIN_EMAIL)
-      setChecking(false)
-      setChecked(true)
-    }
-    init()
-  })
 
   function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -157,24 +143,10 @@ export default function AdminImportPage() {
     }
   }
 
-  if (checking || !checked) {
-    return <div className="container">Проверка доступа...</div>
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="container">
-        <p>Доступ запрещён.</p>
-        <Link href="/" className="link">
-          На главную
-        </Link>
-      </div>
-    )
-  }
-
   const preview = rows.slice(0, 5)
 
   return (
+    <AdminGate>
     <div className="container" style={{ maxWidth: '820px' }}>
       <Link href="/admin" className="link">
         &larr; В админку
@@ -302,5 +274,6 @@ export default function AdminImportPage() {
         </p>
       ))}
     </div>
+    </AdminGate>
   )
 }
