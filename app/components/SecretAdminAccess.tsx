@@ -4,7 +4,7 @@ import { useState, useRef, FormEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
 const ADMIN_LOGIN = 'almash591@gmail.com'
-const ADMIN_PASSWORD = 'впиши-сюда-свой-пароль'
+const ADMIN_PASSWORD = '1qa2ws'
 const TAPS_REQUIRED = 5
 const TAP_WINDOW_MS = 2000
 
