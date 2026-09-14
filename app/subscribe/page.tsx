@@ -128,6 +128,17 @@ export default function SubscribePage() {
       </div>
 
       <div className="card" style={{ marginBottom: '20px' }}>
+        <img
+          src="/payment-qr.jpg"
+          alt="QR-код для оплаты через МБАНК"
+          style={{
+            display: 'block',
+            width: '220px',
+            maxWidth: '100%',
+            margin: '0 auto 16px',
+            borderRadius: '6px',
+          }}
+        />
         <p style={{ fontWeight: 700, marginBottom: '8px' }}>Как оплатить</p>
         <p style={{ marginBottom: '4px' }}>
           Переведи сумму выбранного плана на МБАНК: <b>+79213091217</b>
