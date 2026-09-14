@@ -84,31 +84,35 @@ export default function Home() {
       ) : (
         <>
           <h2 className="section-heading">Блоки</h2>
-          <div>
+          <div className="nav-row" style={{ marginTop: 0 }}>
             {blocks.map((b) => {
               const locked = !isSubscribed && b !== 1
               return (
-                <div key={b} className="list-link-row">
-                  <Link href={`/blocks/${b}`} className="link">
-                    Блок {b}
-                  </Link>
-                  {locked && <span className="locked-badge">по подписке</span>}
-                </div>
+                <Link
+                  key={b}
+                  href={`/blocks/${b}`}
+                  className={locked ? 'btn btn-outline locked-tile' : 'btn btn-outline'}
+                >
+                  Блок {b}
+                  {locked ? ' 🔒' : ''}
+                </Link>
               )
             })}
           </div>
 
           <h2 className="section-heading">Темы</h2>
-          <div>
+          <div className="nav-row" style={{ marginTop: 0 }}>
             {topics.map((t) => {
               const locked = !isSubscribed
               return (
-                <div key={t} className="list-link-row">
-                  <Link href={`/topics/${encodeURIComponent(t)}`} className="link">
-                    {t}
-                  </Link>
-                  {locked && <span className="locked-badge">по подписке</span>}
-                </div>
+                <Link
+                  key={t}
+                  href={`/topics/${encodeURIComponent(t)}`}
+                  className={locked ? 'btn btn-outline locked-tile' : 'btn btn-outline'}
+                >
+                  {t}
+                  {locked ? ' 🔒' : ''}
+                </Link>
               )
             })}
           </div>
