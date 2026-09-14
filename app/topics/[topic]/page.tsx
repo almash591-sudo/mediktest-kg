@@ -26,8 +26,8 @@ export default async function TopicPage({
 
   return (
     <div className="container">
-      <Link href="/" className="link">
-        &larr; Назад
+      <Link href="/" className="btn btn-outline" style={{ marginBottom: '16px' }}>
+        ← Назад
       </Link>
       <h1 className="wordmark" style={{ fontSize: '24px' }}>
         {topic}
