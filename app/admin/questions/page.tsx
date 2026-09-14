@@ -3,8 +3,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import Link from 'next/link'
 import { supabase } from '../../../lib/supabaseClient'
+import AdminGate from '../../components/AdminGate'
 
-const ADMIN_EMAIL = 'almash591@gmail.com'
 const PAGE_SIZE = 20
 
 type Question = {
@@ -28,9 +28,6 @@ function csvEscape(value: string | number | null): string {
 }
 
 export default function AdminQuestionsPage() {
-  const [checking, setChecking] = useState(true)
-  const [isAdmin, setIsAdmin] = useState(false)
-
   const [topics, setTopics] = useState<string[]>([])
   const [topicFilter, setTopicFilter] = useState('')
   const [blockFilter, setBlockFilter] = useState('')
@@ -76,17 +73,6 @@ export default function AdminQuestionsPage() {
 
   useEffect(() => {
     async function init() {
-      const { data: userData } = await supabase.auth.getUser()
-      const email = userData.user?.email
-
-      if (email !== ADMIN_EMAIL) {
-        setIsAdmin(false)
-        setChecking(false)
-        return
-      }
-      setIsAdmin(true)
-      setChecking(false)
-
       const { data: topicRows } = await supabase.from('questions').select('topic')
       const uniqueTopics = Array.from(
         new Set((topicRows ?? []).map((r) => r.topic).filter(Boolean))
@@ -97,8 +83,8 @@ export default function AdminQuestionsPage() {
   }, [])
 
   useEffect(() => {
-    if (isAdmin) loadQuestions()
-  }, [isAdmin, loadQuestions])
+    loadQuestions()
+  }, [loadQuestions])
 
   function startEdit(q: Question) {
     setEditingId(q.id)
@@ -211,24 +197,10 @@ export default function AdminQuestionsPage() {
     loadQuestions()
   }
 
-  if (checking) {
-    return <div className="container">Проверка доступа...</div>
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="container">
-        <p>Доступ запрещён.</p>
-        <Link href="/" className="link">
-          На главную
-        </Link>
-      </div>
-    )
-  }
-
   const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE))
 
   return (
+    <AdminGate>
     <div className="container" style={{ maxWidth: '820px' }}>
       <Link href="/admin" className="link">
         &larr; К заявкам на подписку
@@ -419,5 +391,6 @@ export default function AdminQuestionsPage() {
         </div>
       )}
     </div>
+    </AdminGate>
   )
 }
