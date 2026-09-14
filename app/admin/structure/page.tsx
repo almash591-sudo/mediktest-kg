@@ -175,8 +175,8 @@ export default function AdminStructurePage() {
   return (
     <AdminGate>
     <div className="container" style={{ maxWidth: '900px' }}>
-      <Link href="/admin" className="link">
-        &larr; В админку
+      <Link href="/admin" className="btn btn-outline" style={{ marginBottom: '16px' }}>
+        ← В админку
       </Link>
       <h1 className="wordmark" style={{ fontSize: '24px' }}>
         Структура базы
