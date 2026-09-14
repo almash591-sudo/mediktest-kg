@@ -202,8 +202,8 @@ export default function AdminQuestionsPage() {
   return (
     <AdminGate>
     <div className="container" style={{ maxWidth: '820px' }}>
-      <Link href="/admin" className="link">
-        &larr; К заявкам на подписку
+      <Link href="/admin" className="btn btn-outline" style={{ marginBottom: '16px' }}>
+        ← К заявкам на подписку
       </Link>
       <h1 className="wordmark" style={{ fontSize: '24px' }}>
         Управление вопросами
